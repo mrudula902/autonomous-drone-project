@@ -9,6 +9,7 @@ class Waypoint:
     latitude: float
     longitude: float
     altitude_m: float
+    camera_action: str = "NONE"
 
 
 @dataclass
