@@ -1,0 +1,63 @@
+{
+    "aircraft": "DJI Mavic 4 Pro 512GB",
+    "mission_type": "Waypoint Flight Planning",
+    "start_position": {
+        "latitude": -35.3632622,
+        "longitude": 149.1652375
+    },
+    "altitude_m": 10.0,
+    "speed_mps": 2.5,
+    "waypoint_count": 5,
+    "total_distance_m": 20.19,
+    "waypoints": [
+        {
+            "id": 1,
+            "name": "HOME",
+            "latitude": -35.3632622,
+            "longitude": 149.1652375,
+            "altitude_m": 0.0,
+            "speed_mps": 0.0,
+            "action": "START",
+            "distance_to_next_m": 5.56
+        },
+        {
+            "id": 2,
+            "name": "WAYPOINT 1",
+            "latitude": -35.3632122,
+            "longitude": 149.1652375,
+            "altitude_m": 10.0,
+            "speed_mps": 2.5,
+            "action": "HOVER",
+            "distance_to_next_m": 4.53
+        },
+        {
+            "id": 3,
+            "name": "WAYPOINT 2",
+            "latitude": -35.3632122,
+            "longitude": 149.16528749999998,
+            "altitude_m": 10.0,
+            "speed_mps": 2.5,
+            "action": "HOVER",
+            "distance_to_next_m": 5.56
+        },
+        {
+            "id": 4,
+            "name": "WAYPOINT 3",
+            "latitude": -35.3632622,
+            "longitude": 149.16528749999998,
+            "altitude_m": 10.0,
+            "speed_mps": 2.5,
+            "action": "HOVER",
+            "distance_to_next_m": 4.53
+        },
+        {
+            "id": 5,
+            "name": "RETURN",
+            "latitude": -35.3632622,
+            "longitude": 149.1652375,
+            "altitude_m": 0.0,
+            "speed_mps": 2.5,
+            "action": "RETURN"
+        }
+    ]
+}
