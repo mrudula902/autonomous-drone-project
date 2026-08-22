@@ -1,0 +1,32 @@
+{
+    "name": "College Demo Mission",
+    "aircraft": "Generic Multirotor",
+    "altitude_m": 10.0,
+    "speed_mps": 2.5,
+    "waypoints": [
+        {
+            "name": "HOME",
+            "latitude": 19.8765,
+            "longitude": 75.3433,
+            "altitude_m": 0.0
+        },
+        {
+            "name": "WAYPOINT 1",
+            "latitude": 19.8766,
+            "longitude": 75.3433,
+            "altitude_m": 10.0
+        },
+        {
+            "name": "WAYPOINT 2",
+            "latitude": 19.8766,
+            "longitude": 75.3434,
+            "altitude_m": 10.0
+        },
+        {
+            "name": "RETURN",
+            "latitude": 19.8765,
+            "longitude": 75.3433,
+            "altitude_m": 0.0
+        }
+    ]
+}

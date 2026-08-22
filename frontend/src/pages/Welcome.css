@@ -1,0 +1,525 @@
+* {
+  box-sizing: border-box;
+}
+
+.welcome-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(2, 18, 25, 0.15),
+      rgba(2, 18, 25, 0.75)
+    ),
+    url("/mountains.jpg") center center / cover no-repeat;
+
+  color: white;
+}
+
+.welcome-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(9, 55, 61, 0.05),
+      rgba(1, 15, 19, 0.72)
+    );
+}
+
+/* BRAND */
+
+.welcome-brand {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  z-index: 10;
+
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.welcome-brand-icon {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 11px;
+
+  background: #12a99d;
+
+  box-shadow:
+    0 0 25px rgba(18, 169, 157, 0.35);
+}
+
+/* MAIN */
+
+.welcome-content {
+  position: relative;
+  z-index: 10;
+
+  width: min(850px, 90%);
+
+  margin: 0 auto;
+
+  padding-top: 22vh;
+
+  text-align: center;
+}
+
+.welcome-tag {
+  display: inline-block;
+
+  padding: 8px 16px;
+
+  border: 1px solid rgba(48, 218, 194, 0.45);
+
+  border-radius: 30px;
+
+  background: rgba(4, 38, 42, 0.5);
+
+  color: #5be2cf;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 2px;
+}
+
+.welcome-content h1 {
+  margin: 22px 0 5px;
+
+  font-size: clamp(48px, 7vw, 86px);
+
+  line-height: 0.95;
+
+  font-weight: 900;
+
+  letter-spacing: 2px;
+
+  text-shadow:
+    0 5px 30px rgba(0, 0, 0, 0.6);
+}
+
+.welcome-content h1 span {
+  color: #1bd7c0;
+}
+
+.welcome-content > p {
+  margin: 18px 0;
+
+  color: #d4e5e3;
+
+  font-size: 18px;
+
+  letter-spacing: 0.5px;
+}
+
+.welcome-line {
+  width: 90px;
+  height: 3px;
+
+  margin: 25px auto;
+
+  background: #19cdb7;
+
+  border-radius: 5px;
+
+  box-shadow:
+    0 0 18px rgba(25, 205, 183, 0.7);
+}
+
+.welcome-description {
+  width: min(620px, 90%);
+
+  margin: 0 auto 30px !important;
+
+  color: #a9c0bd !important;
+
+  font-size: 14px !important;
+
+  line-height: 1.7;
+}
+
+/* BUTTON */
+
+.get-started {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 20px;
+
+  padding: 15px 27px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #12aa9d;
+
+  color: white;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 35px rgba(18, 170, 157, 0.3);
+
+  transition: 0.2s ease;
+}
+
+.get-started span {
+  font-size: 20px;
+}
+
+.get-started:hover {
+  transform: translateY(-2px);
+
+  background: #18c4b4;
+
+  box-shadow:
+    0 15px 40px rgba(18, 200, 180, 0.4);
+}
+
+
+/* ================================================= */
+/* REALISTIC QUADCOPTER DRONES                       */
+/* ================================================= */
+
+.flying-drone {
+  position: absolute;
+
+  width: 150px;
+  height: 90px;
+
+  z-index: 4;
+
+  opacity: 0.82;
+
+  animation: droneFloat 8s ease-in-out infinite;
+
+  filter:
+    drop-shadow(0 8px 15px rgba(0, 0, 0, 0.4));
+}
+
+
+/* central drone body */
+
+.drone-center {
+  position: absolute;
+
+  width: 62px;
+  height: 34px;
+
+  left: 44px;
+  top: 28px;
+
+  border-radius: 48% 48% 42% 42%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f3f8f7,
+      #aebdbc 55%,
+      #667978
+    );
+
+  box-shadow:
+    inset 0 -6px 8px rgba(0, 0, 0, 0.25),
+    0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+
+/* camera */
+
+.drone-camera {
+  position: absolute;
+
+  width: 17px;
+  height: 12px;
+
+  left: 23px;
+  bottom: -6px;
+
+  border-radius: 4px;
+
+  background: #182628;
+
+  border: 2px solid #566968;
+}
+
+.drone-camera::after {
+  content: "";
+
+  position: absolute;
+
+  width: 5px;
+  height: 5px;
+
+  left: 4px;
+  top: 2px;
+
+  border-radius: 50%;
+
+  background: #1bd7c0;
+
+  box-shadow:
+    0 0 7px #1bd7c0;
+}
+
+
+/* arms */
+
+.drone-arm {
+  position: absolute;
+
+  width: 52px;
+  height: 7px;
+
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #687978,
+      #d6dfdd,
+      #6c7c7b
+    );
+
+  transform-origin: center;
+
+  box-shadow:
+    0 3px 5px rgba(0, 0, 0, 0.25);
+}
+
+.arm-tl {
+  left: 7px;
+  top: 25px;
+
+  transform: rotate(23deg);
+}
+
+.arm-tr {
+  right: 7px;
+  top: 25px;
+
+  transform: rotate(-23deg);
+}
+
+.arm-bl {
+  left: 7px;
+  bottom: 23px;
+
+  transform: rotate(-23deg);
+}
+
+.arm-br {
+  right: 7px;
+  bottom: 23px;
+
+  transform: rotate(23deg);
+}
+
+
+/* rotors */
+
+.drone-rotor {
+  position: absolute;
+
+  width: 29px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  border: 2px solid rgba(220, 240, 238, 0.9);
+
+  background: rgba(100, 120, 120, 0.2);
+
+  box-shadow:
+    0 0 5px rgba(220, 240, 238, 0.25);
+}
+
+.rotor-tl {
+  left: 0;
+  top: 16px;
+}
+
+.rotor-tr {
+  right: 0;
+  top: 16px;
+}
+
+.rotor-bl {
+  left: 0;
+  bottom: 14px;
+}
+
+.rotor-br {
+  right: 0;
+  bottom: 14px;
+}
+
+
+/* little rotor hubs */
+
+.rotor-tl::after,
+.rotor-tr::after,
+.rotor-bl::after,
+.rotor-br::after {
+  content: "";
+
+  position: absolute;
+
+  width: 6px;
+  height: 6px;
+
+  left: 9px;
+  top: -1px;
+
+  border-radius: 50%;
+
+  background: #b9c8c6;
+}
+
+
+/* DRONE POSITIONS */
+
+.drone-one {
+  top: 15%;
+  left: 8%;
+
+  transform: scale(0.9);
+
+  animation-delay: 0s;
+}
+
+.drone-two {
+  top: 24%;
+  right: 7%;
+
+  transform: scale(0.72);
+
+  animation-delay: 1.8s;
+}
+
+.drone-three {
+  top: 47%;
+  left: 15%;
+
+  transform: scale(0.55);
+
+  opacity: 0.55;
+
+  animation-delay: 3.5s;
+}
+
+.drone-four {
+  top: 12%;
+  right: 27%;
+
+  transform: scale(0.45);
+
+  opacity: 0.5;
+
+  animation-delay: 5s;
+}
+
+
+/* FLOATING MOVEMENT */
+
+@keyframes droneFloat {
+
+  0% {
+    margin-top: 0;
+  }
+
+  25% {
+    margin-top: -14px;
+  }
+
+  50% {
+    margin-top: 4px;
+  }
+
+  75% {
+    margin-top: 12px;
+  }
+
+  100% {
+    margin-top: 0;
+  }
+}
+
+
+/* FOOTER */
+
+.welcome-footer {
+  position: absolute;
+
+  bottom: 25px;
+  left: 0;
+  right: 0;
+
+  z-index: 10;
+
+  text-align: center;
+
+  color: rgba(201, 224, 221, 0.55);
+
+  font-size: 9px;
+
+  letter-spacing: 2px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+  .welcome-brand {
+    left: 20px;
+    top: 20px;
+
+    font-size: 11px;
+  }
+
+  .welcome-brand-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .welcome-content {
+    padding-top: 27vh;
+  }
+
+  .welcome-content h1 {
+    font-size: 45px;
+  }
+
+  .welcome-content > p {
+    font-size: 15px;
+  }
+
+  .flying-drone {
+    opacity: 0.45;
+  }
+}

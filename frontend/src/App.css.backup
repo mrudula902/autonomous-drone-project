@@ -1,0 +1,1292 @@
+/* =========================================================
+   DRONE MISSION STUDIO
+   FINAL UI
+   Replace the ENTIRE App.css with this file.
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background: #061315;
+  color: #f4f8f8;
+}
+
+/* =========================================================
+   MAIN APP
+   ========================================================= */
+
+.app {
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 80% 15%,
+      rgba(20, 150, 145, 0.08),
+      transparent 32%
+    ),
+    #061315;
+}
+
+/* =========================================================
+   TOP HEADER
+   ========================================================= */
+
+.topbar {
+  height: 88px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+
+  padding: 0 28px;
+
+  background: rgba(5, 19, 21, 0.98);
+  border-bottom: 1px solid rgba(93, 177, 175, 0.16);
+
+  position: relative;
+  z-index: 50;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 420px;
+}
+
+.brand-icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background: linear-gradient(
+    145deg,
+    #13b7aa,
+    #087e78
+  );
+
+  color: white;
+  font-size: 26px;
+  font-weight: 800;
+
+  box-shadow:
+    0 8px 25px rgba(0, 190, 175, 0.16);
+}
+
+.brand h1 {
+  margin: 0;
+
+  font-size: 25px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+}
+
+.brand h1 span {
+  color: #27d1c1;
+}
+
+.brand p {
+  margin: 7px 0 0;
+
+  color: #91a8ab;
+  font-size: 12px;
+}
+
+/* =========================================================
+   TOP NAVIGATION
+   ========================================================= */
+
+.top-navigation {
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.top-navigation button {
+  border: 0;
+  background: transparent;
+
+  color: #aebfc1;
+
+  padding: 14px 17px;
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.top-navigation button:hover {
+  background: rgba(40, 200, 190, 0.08);
+  color: white;
+}
+
+.top-navigation .top-active {
+  color: white;
+
+  background: rgba(21, 175, 164, 0.12);
+
+  border: 1px solid rgba(35, 207, 194, 0.28);
+
+  box-shadow:
+    inset 0 -2px 0 #27d1c1;
+}
+
+/* =========================================================
+   SYSTEM STATUS
+   ========================================================= */
+
+.system-status {
+  min-width: 160px;
+
+  padding: 11px 15px;
+
+  border: 1px solid rgba(43, 206, 188, 0.22);
+  border-radius: 12px;
+
+  color: #41dbbd;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  text-align: center;
+
+  background: rgba(19, 90, 82, 0.13);
+}
+
+.system-status > span {
+  display: inline-block;
+
+  width: 8px;
+  height: 8px;
+
+  margin-right: 7px;
+
+  border-radius: 50%;
+
+  background: #31d89e;
+
+  box-shadow: 0 0 10px #31d89e;
+}
+
+.system-status small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #728b8e;
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.profile {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(150, 190, 190, 0.25);
+  border-radius: 50%;
+
+  color: white;
+  font-weight: 700;
+
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* =========================================================
+   WORKSPACE
+   ========================================================= */
+
+.workspace {
+  display: grid;
+  grid-template-columns: 312px minmax(0, 1fr);
+
+  min-height: calc(100vh - 88px);
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+  position: relative;
+
+  min-height: calc(100vh - 88px);
+
+  padding: 34px 18px 30px;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(3, 19, 21, 0.55),
+      rgba(3, 17, 19, 0.91)
+    ),
+    url("/images/mountains.jpg") center bottom / cover no-repeat;
+
+  border-right: 1px solid rgba(76, 161, 157, 0.18);
+}
+
+/*
+   Dark overlay over the mountain.
+   The mountain remains visible while text stays readable.
+*/
+
+.sidebar::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(4, 20, 22, 0.72) 0%,
+      rgba(4, 20, 22, 0.35) 40%,
+      rgba(4, 20, 22, 0.72) 100%
+    );
+
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+.sidebar > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   SIDEBAR TITLES
+   ========================================================= */
+
+.section-title {
+  margin: 0 6px 18px;
+
+  color: #a9bbbd;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+/* =========================================================
+   SIDEBAR BUTTONS
+   ========================================================= */
+
+.sidebar > button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  margin-bottom: 4px;
+  padding: 13px 15px;
+
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  background: transparent;
+
+  color: #dce5e5;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.sidebar > button:hover {
+  background: rgba(27, 189, 177, 0.09);
+  color: white;
+}
+
+.sidebar > button.side-active {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(24, 193, 180, 0.20),
+      rgba(24, 193, 180, 0.06)
+    );
+
+  border-color: rgba(35, 210, 195, 0.38);
+
+  color: white;
+
+  box-shadow:
+    inset 3px 0 0 #25d3c2;
+}
+
+.sidebar > button span {
+  flex: 1;
+}
+
+/* =========================================================
+   AIRCRAFT CARD
+   ========================================================= */
+
+.aircraft-card {
+  margin-top: 30px;
+
+  padding: 22px 20px 20px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(8, 42, 43, 0.88),
+      rgba(4, 25, 27, 0.90)
+    );
+
+  border: 1px solid rgba(72, 192, 183, 0.22);
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.25);
+
+  overflow: hidden;
+}
+
+.aircraft-title,
+.weather-title {
+  color: #9db5b7;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 1.6px;
+}
+
+/* =========================================================
+   CSS DRONE
+   ========================================================= */
+
+.drone-visual {
+  position: relative;
+
+  width: 100%;
+  height: 115px;
+
+  margin: 14px 0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drone-body {
+  position: relative;
+
+  width: 74px;
+  height: 42px;
+
+  border-radius: 48% 48% 42% 42%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #d9e4e4,
+      #87999b 55%,
+      #47595c
+    );
+
+  box-shadow:
+    0 10px 18px rgba(0, 0, 0, 0.45);
+}
+
+.drone-body::after {
+  content: "";
+
+  position: absolute;
+
+  width: 25px;
+  height: 17px;
+
+  left: 24px;
+  bottom: -9px;
+
+  border-radius: 8px;
+
+  background: #1d292b;
+
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.drone-light {
+  position: absolute;
+
+  width: 9px;
+  height: 9px;
+
+  top: 9px;
+  left: 33px;
+
+  border-radius: 50%;
+
+  background: #40dcca;
+
+  box-shadow:
+    0 0 12px #40dcca;
+}
+
+.drone-arm {
+  position: absolute;
+
+  width: 73px;
+  height: 7px;
+
+  top: 54px;
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    90deg,
+    #b9c8c9,
+    #6c7d7f
+  );
+}
+
+.drone-arm.left {
+  transform: translateX(-52px) rotate(-13deg);
+}
+
+.drone-arm.right {
+  transform: translateX(52px) rotate(13deg);
+}
+
+.propeller {
+  position: absolute;
+
+  width: 32px;
+  height: 4px;
+
+  top: 47px;
+
+  border-radius: 20px;
+
+  background: #d7e2e2;
+
+  opacity: 0.9;
+}
+
+.propeller.p1 {
+  left: 19px;
+  transform: rotate(25deg);
+}
+
+.propeller.p2 {
+  left: 19px;
+  transform: rotate(-25deg);
+}
+
+.propeller.p3 {
+  right: 19px;
+  transform: rotate(25deg);
+}
+
+.propeller.p4 {
+  right: 19px;
+  transform: rotate(-25deg);
+}
+
+.aircraft-card h3 {
+  margin: 5px 0 9px;
+
+  font-size: 16px;
+  color: #f4f8f8;
+}
+
+.connection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #42d99e;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.connection span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #2fe39e;
+  box-shadow: 0 0 8px #2fe39e;
+}
+
+.battery {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  margin-top: 12px;
+}
+
+.battery > div {
+  flex: 1;
+
+  height: 6px;
+
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  overflow: hidden;
+}
+
+.battery > div::after {
+  content: "";
+
+  display: block;
+
+  width: 92%;
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #2ad6a7;
+}
+
+.battery b {
+  color: #a9c0c0;
+
+  font-size: 10px;
+}
+
+/* =========================================================
+   WEATHER CARD
+   ========================================================= */
+
+.weather-card {
+  margin-top: 18px;
+
+  padding: 22px 20px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(8, 42, 43, 0.88),
+      rgba(4, 25, 27, 0.90)
+    );
+
+  border: 1px solid rgba(72, 192, 183, 0.22);
+}
+
+.temperature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 18px;
+}
+
+.temperature:first-letter {
+  font-size: 22px;
+}
+
+.temperature strong {
+  font-size: 27px;
+}
+
+.weather-status {
+  margin: 3px 0 20px 42px;
+
+  color: #9db1b3;
+  font-size: 12px;
+}
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 8px;
+}
+
+.weather-grid div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.weather-grid strong {
+  color: #f0f6f6;
+  font-size: 12px;
+}
+
+.weather-grid small {
+  color: #799092;
+  font-size: 9px;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.main-content {
+  min-width: 0;
+
+  padding: 32px 58px 45px;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(21, 165, 155, 0.07),
+      transparent 35%
+    ),
+    #061315;
+
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 30px;
+}
+
+.eyebrow {
+  margin-bottom: 8px;
+
+  color: #24d1bf;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 1.8px;
+}
+
+.heading-row h2 {
+  margin: 0;
+
+  font-size: clamp(30px, 3vw, 42px);
+
+  line-height: 1.1;
+
+  letter-spacing: -1.3px;
+
+  color: #f5f8f8;
+}
+
+.heading-row p {
+  margin: 10px 0 0;
+
+  color: #8fa6a8;
+
+  font-size: 13px;
+}
+
+.new-mission {
+  flex-shrink: 0;
+
+  padding: 14px 23px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1abdb0,
+      #0b9289
+    );
+
+  color: white;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 25px rgba(15, 177, 164, 0.18);
+}
+
+.new-mission:hover {
+  filter: brightness(1.08);
+}
+
+/* =========================================================
+   STAT CARDS
+   ========================================================= */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 14px;
+
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  min-height: 108px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 18px;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(9, 38, 41, 0.94),
+      rgba(5, 26, 29, 0.94)
+    );
+
+  border: 1px solid rgba(78, 170, 169, 0.20);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  font-size: 21px;
+}
+
+.stat-icon.blue {
+  color: #45d9e8;
+  background: rgba(30, 177, 198, 0.16);
+}
+
+.stat-icon.purple {
+  color: #a47cff;
+  background: rgba(125, 84, 232, 0.17);
+}
+
+.stat-icon.green {
+  color: #43ddb4;
+  background: rgba(27, 189, 139, 0.16);
+}
+
+.stat-icon.orange {
+  color: #ffbf4c;
+  background: rgba(237, 170, 51, 0.15);
+}
+
+.stat-card small,
+.stat-card em {
+  display: block;
+}
+
+.stat-card small {
+  color: #82999b;
+  font-size: 9px;
+}
+
+.stat-card strong {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #f4f8f8;
+
+  font-size: 20px;
+}
+
+.stat-card em {
+  margin-top: 4px;
+
+  color: #6f8587;
+
+  font-size: 9px;
+
+  font-style: normal;
+}
+
+/* =========================================================
+   MAP CONTAINER
+   ========================================================= */
+
+.map-wrapper {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 390px;
+
+  margin-top: 0;
+
+  border-radius: 17px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(80, 175, 171, 0.22);
+
+  background: #08191b;
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.20);
+}
+
+/* Leaflet map */
+
+.map-wrapper .leaflet-container {
+  width: 100%;
+  height: 390px;
+
+  background: #182a2c;
+
+  font-family: inherit;
+}
+
+/* =========================================================
+   MAP TOOLBAR
+   ========================================================= */
+
+.map-toolbar,
+.map-controls {
+  position: absolute;
+
+  top: 14px;
+  left: 14px;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  padding: 7px;
+
+  border-radius: 10px;
+
+  background: rgba(5, 19, 21, 0.90);
+
+  border: 1px solid rgba(120, 180, 180, 0.16);
+
+  backdrop-filter: blur(10px);
+}
+
+.map-toolbar button,
+.map-controls button {
+  border: 0;
+
+  padding: 8px 10px;
+
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: #dce8e8;
+
+  font-family: inherit;
+  font-size: 11px;
+
+  cursor: pointer;
+}
+
+.map-toolbar button:hover,
+.map-controls button:hover {
+  background: rgba(35, 201, 188, 0.12);
+}
+
+.map-toggle {
+  position: absolute;
+
+  right: 14px;
+  top: 14px;
+
+  z-index: 1000;
+
+  padding: 8px;
+
+  border-radius: 9px;
+
+  background: rgba(5, 19, 21, 0.90);
+
+  border: 1px solid rgba(120, 180, 180, 0.16);
+}
+
+.map-toggle button {
+  border: 0;
+
+  padding: 7px 10px;
+
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: #a9babb;
+
+  font-family: inherit;
+  font-size: 10px;
+}
+
+.map-toggle button.active {
+  color: white;
+  background: #13aaa0;
+}
+
+.live-map {
+  position: absolute;
+
+  left: 14px;
+  bottom: 14px;
+
+  z-index: 1000;
+
+  padding: 9px 13px;
+
+  border-radius: 8px;
+
+  color: #bff8ec;
+
+  background: rgba(5, 22, 24, 0.90);
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.live-map::before {
+  content: "";
+
+  display: inline-block;
+
+  width: 7px;
+  height: 7px;
+
+  margin-right: 7px;
+
+  border-radius: 50%;
+
+  background: #28dca8;
+}
+
+/* =========================================================
+   MISSION INTELLIGENCE
+   ========================================================= */
+
+.mission-intelligence {
+  margin-top: 16px;
+
+  padding: 24px;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(8, 39, 42, 0.96),
+      rgba(5, 25, 28, 0.96)
+    );
+
+  border: 1px solid rgba(78, 170, 169, 0.20);
+}
+
+.analysis-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.analysis-header h2 {
+  margin: 0;
+
+  font-size: 20px;
+
+  letter-spacing: -0.3px;
+}
+
+.mission-health {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 9px 13px;
+
+  border: 1px solid rgba(41, 209, 172, 0.25);
+
+  border-radius: 10px;
+
+  background: rgba(18, 155, 130, 0.07);
+}
+
+.mission-health small {
+  color: #718c8e;
+  font-size: 9px;
+}
+
+.mission-health strong {
+  color: #37d8a5;
+  font-size: 19px;
+}
+
+.analysis-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.analysis-grid > div {
+  padding: 16px;
+
+  border-radius: 11px;
+
+  background: rgba(18, 57, 60, 0.55);
+
+  border: 1px solid rgba(85, 164, 163, 0.12);
+}
+
+.analysis-grid small {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #769092;
+
+  font-size: 9px;
+}
+
+.analysis-grid strong {
+  color: #edf5f5;
+
+  font-size: 13px;
+}
+
+/* =========================================================
+   BOTTOM METRICS
+   ========================================================= */
+
+.metrics {
+  display: grid;
+
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+
+  margin-top: 16px;
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  background: rgba(7, 30, 32, 0.90);
+
+  border: 1px solid rgba(78, 170, 169, 0.18);
+}
+
+.metrics > div {
+  min-width: 0;
+
+  padding: 17px 13px;
+
+  border-right: 1px solid rgba(91, 157, 158, 0.13);
+}
+
+.metrics > div:last-child {
+  border-right: 0;
+}
+
+.metrics small {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #718a8c;
+
+  font-size: 8px;
+
+  white-space: nowrap;
+}
+
+.metrics strong {
+  color: #f0f6f6;
+
+  font-size: 13px;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   LEAFLET FIXES
+   ========================================================= */
+
+.leaflet-control-zoom {
+  border: 0 !important;
+}
+
+.leaflet-control-zoom a {
+  background: rgba(5, 19, 21, 0.92) !important;
+
+  color: white !important;
+
+  border: 1px solid rgba(90, 170, 170, 0.20) !important;
+}
+
+.leaflet-control-attribution {
+  font-size: 8px !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1250px) {
+  .top-navigation {
+    display: none;
+  }
+
+  .brand {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .analysis-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .metrics {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: 250px minmax(0, 1fr);
+  }
+
+  .main-content {
+    padding: 25px;
+  }
+
+  .brand h1 {
+    font-size: 20px;
+  }
+
+  .system-status {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .topbar {
+    height: 72px;
+    padding: 0 16px;
+  }
+
+  .brand-icon {
+    width: 43px;
+    height: 43px;
+  }
+
+  .brand h1 {
+    font-size: 17px;
+  }
+
+  .brand p {
+    display: none;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    min-height: auto;
+    padding: 20px;
+
+    display: none;
+  }
+
+  .main-content {
+    padding: 22px 16px;
+  }
+
+  .heading-row {
+    flex-direction: column;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .map-wrapper,
+  .map-wrapper .leaflet-container {
+    min-height: 330px;
+    height: 330px;
+  }
+}
