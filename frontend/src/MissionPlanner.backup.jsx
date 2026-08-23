@@ -1,25 +1,45 @@
-import React, { useMemo, useState } from "react";
-import { saveMissionToBackend } from "./missionApi";
+import React, {
+  useMemo,
+  useState,
+} from "react";
+
+import MapView from "./MapView";
 import { validateMission } from "./missionValidator";
 
-
 export default function MissionPlanner({
-  waypoints = [],
-  onSave
+  onSave,
 }) {
 
-  const [missionName, setMissionName] = useState(
+  const [
+    missionName,
+    setMissionName,
+  ] = useState(
     "New Autonomous Mission"
   );
 
-  const [altitude, setAltitude] = useState(30);
+  const [
+    altitude,
+    setAltitude,
+  ] = useState(30);
 
-  const [speed, setSpeed] = useState(5);
+  const [
+    speed,
+    setSpeed,
+  ] = useState(5);
 
-  const [returnHome, setReturnHome] = useState(true);
+  const [
+    returnHome,
+    setReturnHome,
+  ] = useState(true);
 
-  const [saving, setSaving] = useState(false);
+  const [
+    waypoints,
+    setWaypoints,
+  ] = useState([]);
 
+  /* =========================
+     DISTANCE CALCULATION
+  ========================= */
 
   const distance = useMemo(() => {
 
@@ -29,24 +49,39 @@ export default function MissionPlanner({
 
     let total = 0;
 
-    for (let i = 1; i < waypoints.length; i++) {
+    for (
+      let i = 1;
+      i < waypoints.length;
+      i++
+    ) {
 
-      const a = waypoints[i - 1];
-      const b = waypoints[i];
+      const a =
+        waypoints[i - 1];
+
+      const b =
+        waypoints[i];
 
       const R = 6371;
 
       const dLat =
-        ((b.lat - a.lat) * Math.PI) / 180;
+        ((b.lat - a.lat) *
+          Math.PI) /
+        180;
 
       const dLon =
-        ((b.lng - a.lng) * Math.PI) / 180;
+        ((b.lng - a.lng) *
+          Math.PI) /
+        180;
 
       const x =
         Math.sin(dLat / 2) ** 2 +
-        Math.cos((a.lat * Math.PI) / 180) *
-        Math.cos((b.lat * Math.PI) / 180) *
-        Math.sin(dLon / 2) ** 2;
+        Math.cos(
+          (a.lat * Math.PI) / 180
+        ) *
+          Math.cos(
+            (b.lat * Math.PI) / 180
+          ) *
+          Math.sin(dLon / 2) ** 2;
 
       total +=
         R *
@@ -61,105 +96,97 @@ export default function MissionPlanner({
 
   }, [waypoints]);
 
+  /* =========================
+     ESTIMATED TIME
+  ========================= */
 
   const estimatedTime =
-    distance > 0
+    distance > 0 && Number(speed) > 0
       ? Math.ceil(
-          distance / Number(speed || 1)
+          distance / Number(speed)
         )
       : 0;
 
+  /* =========================
+     WAYPOINT UPDATE
+  ========================= */
 
-  const saveMission = async () => {
+  const handleWaypointsChange = (
+    updatedWaypoints
+  ) => {
+    setWaypoints(
+      updatedWaypoints
+    );
+  };
+
+  /* =========================
+     SAVE MISSION
+  ========================= */
+
+  const saveMission = () => {
 
     const mission = {
 
       name: missionName,
 
-      altitude: Number(altitude),
+      altitude:
+        Number(altitude),
 
-      speed: Number(speed),
+      speed:
+        Number(speed),
 
       returnHome,
 
       waypoints,
 
       distance:
-        Number(distance.toFixed(1)),
+        Number(
+          distance.toFixed(1)
+        ),
 
       estimatedTime,
 
       createdAt:
-        new Date().toISOString()
-    };
+        new Date().toISOString(),
 
+    };
 
     const validation =
       validateMission(mission);
-
 
     if (!validation.valid) {
 
       alert(
         "Mission cannot be saved:\n\n" +
-        validation.errors.join("\n")
+        validation.errors.join(
+          "\n"
+        )
       );
 
       return;
     }
 
+    localStorage.setItem(
+      "autonomousMission",
+      JSON.stringify(mission)
+    );
 
-    setSaving(true);
-
-
-    try {
-
-      localStorage.setItem(
-        "autonomousMission",
-        JSON.stringify(mission)
-      );
-
-
-      const result =
-        await saveMissionToBackend(mission);
-
-
-      if (onSave) {
-        onSave(mission);
-      }
-
-
-      alert(
-        "Mission saved successfully.\n\n" +
-        "Backend: ONLINE\n" +
-        "Waypoints: " +
-        waypoints.length
-      );
-
-
-      console.log(
-        "Mission saved:",
-        result
-      );
-
-    } catch (error) {
-
-      alert(
-        "Mission could not reach backend:\n\n" +
-        error.message
-      );
-
-    } finally {
-
-      setSaving(false);
-
+    if (onSave) {
+      onSave(mission);
     }
-  };
 
+    alert(
+      "Mission saved successfully."
+    );
+  };
 
   return (
 
     <div className="mission-planner">
+
+      {/* =========================
+          HEADER
+      ========================= */}
 
       <div className="planner-header">
 
@@ -175,30 +202,26 @@ export default function MissionPlanner({
 
           <p>
             Configure the mission before
-            sending it to the simulation
-            flight-control system.
+            sending it to the flight-control
+            system.
           </p>
 
         </div>
 
-
         <button
           className="primary-action"
           onClick={saveMission}
-          disabled={saving}
         >
-
-          {saving
-            ? "Saving..."
-            : "Save Mission"}
-
+          Save Mission
         </button>
 
       </div>
 
+      {/* =========================
+          CONFIGURATION
+      ========================= */}
 
       <div className="planner-grid">
-
 
         <div className="planner-card">
 
@@ -209,10 +232,12 @@ export default function MissionPlanner({
           <input
             value={missionName}
             onChange={(e) =>
-              setMissionName(e.target.value)
+              setMissionName(
+                e.target.value
+              )
             }
+            placeholder="Enter mission name"
           />
-
 
           <label>
             FLIGHT ALTITUDE (m)
@@ -224,10 +249,11 @@ export default function MissionPlanner({
             max="120"
             value={altitude}
             onChange={(e) =>
-              setAltitude(e.target.value)
+              setAltitude(
+                e.target.value
+              )
             }
           />
-
 
           <label>
             FLIGHT SPEED (m/s)
@@ -239,10 +265,11 @@ export default function MissionPlanner({
             max="15"
             value={speed}
             onChange={(e) =>
-              setSpeed(e.target.value)
+              setSpeed(
+                e.target.value
+              )
             }
           />
-
 
           <label className="checkbox-row">
 
@@ -264,6 +291,9 @@ export default function MissionPlanner({
 
         </div>
 
+        {/* =========================
+            LIVE SUMMARY
+        ========================= */}
 
         <div className="planner-card">
 
@@ -271,9 +301,7 @@ export default function MissionPlanner({
             Mission Summary
           </h3>
 
-
           <div className="summary-row">
-
             <span>
               Waypoints
             </span>
@@ -281,12 +309,9 @@ export default function MissionPlanner({
             <strong>
               {waypoints.length}
             </strong>
-
           </div>
 
-
           <div className="summary-row">
-
             <span>
               Route distance
             </span>
@@ -294,12 +319,9 @@ export default function MissionPlanner({
             <strong>
               {distance.toFixed(1)} m
             </strong>
-
           </div>
 
-
           <div className="summary-row">
-
             <span>
               Altitude
             </span>
@@ -307,12 +329,9 @@ export default function MissionPlanner({
             <strong>
               {altitude} m
             </strong>
-
           </div>
 
-
           <div className="summary-row">
-
             <span>
               Speed
             </span>
@@ -320,48 +339,46 @@ export default function MissionPlanner({
             <strong>
               {speed} m/s
             </strong>
-
           </div>
 
-
           <div className="summary-row">
-
             <span>
               Estimated time
             </span>
 
             <strong>
-
               {estimatedTime > 0
                 ? `${estimatedTime} sec`
                 : "--"}
-
             </strong>
-
           </div>
 
-
           <div className="summary-row">
-
             <span>
               Return home
             </span>
 
             <strong>
-
               {returnHome
                 ? "Enabled"
                 : "Disabled"}
-
             </strong>
-
           </div>
 
         </div>
 
       </div>
 
-    </div>
+      {/* =========================
+          MAP
+      ========================= */}
 
+      <MapView
+        onWaypointsChange={
+          handleWaypointsChange
+        }
+      />
+
+    </div>
   );
 }
