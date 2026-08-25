@@ -1,0 +1,42 @@
+{
+  "name": "verify_mission.py",
+  "altitude": 30,
+  "speed": 5,
+  "returnHome": true,
+  "survey": {
+    "type": "Waypoint Survey",
+    "photoGrid": true,
+    "frontOverlap": 80,
+    "sideOverlap": 70,
+    "courseAngle": 0,
+    "photoInterval": 2
+  },
+  "camera": {
+    "action": "Take Photo",
+    "gimbalAngle": -90,
+    "hoverTime": 0
+  },
+  "waypoints": [
+    {
+      "lat": 19.8745033629425,
+      "lng": 75.32769441604616
+    },
+    {
+      "lat": 19.874876685889113,
+      "lng": 75.32771587371828
+    },
+    {
+      "lat": 19.87478587768573,
+      "lng": 75.32812356948854
+    },
+    {
+      "lat": 19.874483183298715,
+      "lng": 75.32811284065248
+    }
+  ],
+  "distance": 119.1,
+  "estimatedTime": 24,
+  "estimatedPhotos": 59,
+  "createdAt": "2026-08-25T08:00:45.986Z",
+  "status": "Ready"
+}

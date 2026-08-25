@@ -1,5 +1,7 @@
 import { useState } from "react";
-import MapView from "./MapView";
+import MissionPlanner from "./MissionPlanner";
+import Reports from "./pages/Reports";
+import TelemetryPanel from "./TelemetryPanel";
 import "./App.css";
 
 export default function App() {
@@ -60,14 +62,16 @@ export default function App() {
   return (
     <div className="app">
 
-      {/* ================= HEADER ================= */}
-
       <header className="topbar">
 
         <div className="brand">
-          <div className="brand-icon">✈</div>
+
+          <div className="brand-icon">
+            ✈
+          </div>
 
           <div>
+
             <h1>
               DRONE <span>MISSION STUDIO</span>
             </h1>
@@ -75,67 +79,66 @@ export default function App() {
             <p>
               Autonomous Survey & Mission Planning System
             </p>
+
           </div>
+
         </div>
+
 
         <nav className="top-navigation">
 
-          <button
-            className={page === "Mission Planner" ? "top-active" : ""}
-            onClick={() => setPage("Mission Planner")}
-          >
-            ▣ Mission Planner
-          </button>
+          {[
+            "Mission Planner",
+            "Missions",
+            "Photos",
+            "Results",
+            "Reports",
+          ].map((item) => (
 
-          <button
-            className={page === "Missions" ? "top-active" : ""}
-            onClick={() => setPage("Missions")}
-          >
-            ⌖ Missions
-          </button>
+            <button
+              key={item}
+              className={
+                page === item
+                  ? "top-active"
+                  : ""
+              }
+              onClick={() => setPage(item)}
+            >
+              {item === "Mission Planner" && "▣ "}
+              {item === "Missions" && "⌖ "}
+              {item === "Photos" && "▣ "}
+              {item === "Results" && "▥ "}
+              {item === "Reports" && "▤ "}
+              {item}
+            </button>
 
-          <button
-            className={page === "Photos" ? "top-active" : ""}
-            onClick={() => setPage("Photos")}
-          >
-            ▣ Photos
-          </button>
-
-          <button
-            className={page === "Results" ? "top-active" : ""}
-            onClick={() => setPage("Results")}
-          >
-            ▥ Results
-          </button>
-
-          <button
-            className={page === "Reports" ? "top-active" : ""}
-            onClick={() => setPage("Reports")}
-          >
-            ▤ Reports
-          </button>
+          ))}
 
         </nav>
 
+
         <div className="system-status">
+
           <span></span>
 
           <div>
             SYSTEM READY
-            <small>All systems operational</small>
+            <small>
+              All systems operational
+            </small>
           </div>
+
         </div>
 
-        <div className="profile">M</div>
+
+        <div className="profile">
+          M
+        </div>
 
       </header>
 
 
-      {/* ================= WORKSPACE ================= */}
-
       <div className="workspace">
-
-        {/* ================= SIDEBAR ================= */}
 
         <aside className="sidebar">
 
@@ -147,23 +150,37 @@ export default function App() {
               MISSION CONTROL
             </div>
 
+
             <div className="side-menu">
 
               {menu.map(([icon, name]) => (
+
                 <button
                   key={name}
-                  className={page === name ? "side-active" : ""}
-                  onClick={() => setPage(name)}
+                  className={
+                    page === name
+                      ? "side-active"
+                      : ""
+                  }
+                  onClick={() =>
+                    setPage(name)
+                  }
                 >
-                  <span className="menu-icon">{icon}</span>
-                  <span>{name}</span>
+
+                  <span className="menu-icon">
+                    {icon}
+                  </span>
+
+                  <span>
+                    {name}
+                  </span>
+
                 </button>
+
               ))}
 
             </div>
 
-
-            {/* ================= AIRCRAFT ================= */}
 
             <div className="aircraft-card">
 
@@ -188,7 +205,9 @@ export default function App() {
 
               </div>
 
-              <h3>DJI Mavic 4 Pro</h3>
+              <h3>
+                DJI Mavic 4 Pro
+              </h3>
 
               <div className="connection">
                 <span></span>
@@ -196,17 +215,19 @@ export default function App() {
               </div>
 
               <div className="battery">
+
                 <div className="battery-track">
                   <span></span>
                 </div>
 
-                <b>92%</b>
+                <b>
+                  92%
+                </b>
+
               </div>
 
             </div>
 
-
-            {/* ================= WEATHER ================= */}
 
             <div className="weather-card">
 
@@ -245,25 +266,37 @@ export default function App() {
             </div>
 
           </div>
-
         </aside>
 
 
-        {/* ================= MAIN ================= */}
-
         <main className="main-content">
 
-          {page === "Mission Planner" && <MissionPlanner />}
+          {page === "Mission Planner" && (
+            <>
+              <MissionPlanner />
+              <TelemetryPanel />
+            </>
+          )}
 
-          {page === "Missions" && <MissionsPage />}
+          {page === "Missions" && (
+            <MissionsPage />
+          )}
 
-          {page === "Photos" && <PhotosPage />}
+          {page === "Photos" && (
+            <PhotosPage />
+          )}
 
-          {page === "Results" && <ResultsPage />}
+          {page === "Results" && (
+            <ResultsPage />
+          )}
 
-          {page === "Reports" && <ReportsPage />}
+          {page === "Reports" && (
+            <Reports />
+          )}
 
-          {page === "Settings" && <SettingsPage />}
+          {page === "Settings" && (
+            <SettingsPage />
+          )}
 
         </main>
 
@@ -274,189 +307,10 @@ export default function App() {
 }
 
 
-/* =========================================================
-   MISSION PLANNER
-========================================================= */
-
-function MissionPlanner() {
-  return (
-    <>
-      <div className="heading-row">
-
-        <div>
-
-          <div className="eyebrow">
-            MISSION PLANNER
-          </div>
-
-          <h2>
-            Plan your next survey mission
-          </h2>
-
-          <p>
-            Select a survey area, generate a flight grid
-            and prepare the mission for review.
-          </p>
-
-        </div>
-
-        <button className="new-mission">
-          + New Mission
-        </button>
-
-      </div>
-
-
-      {/* ================= STATISTICS ================= */}
-
-      <section className="stats">
-
-        <Stat
-          icon="⌁"
-          color="blue"
-          title="Survey Area"
-          value="2.45 ha"
-          text="Estimated area"
-        />
-
-       <Stat 
-          icon="⌖" 
-          color="purple" 
-          title="Waypoints" 
-          value="0" 
-          text="Flight points" 
-       />
-
-       <Stat 
-          icon="◉" 
-          color="green" 
-          title="Photo Points" 
-          value="0" 
-          text="Estimated photos" 
-        />
-
-        <Stat
-          icon="✈"
-          color="orange"
-          title="Mission Status"
-          value="Draft"
-          text="Not uploaded"
-        />
-
-      </section>
-
-
-      {/* ================= MAP ================= */}
-
-      <MapView />
-
-
-      {/* ================= ANALYSIS ================= */}
-
-      <section className="mission-intelligence">
-
-        <div className="analysis-header">
-
-          <div>
-
-            <div className="eyebrow">
-              MISSION ANALYSIS
-            </div>
-
-            <h2>
-              Mission intelligence
-            </h2>
-
-          </div>
-
-          <div className="mission-health">
-            <small>MISSION HEALTH</small>
-            <strong>94%</strong>
-          </div>
-
-        </div>
-
-
-        <div className="analysis-grid">
-
-          <Info
-            title="Coverage"
-            value="Excellent"
-          />
-
-          <Info
-            title="Route Efficiency"
-            value="91%"
-          />
-
-          <Info
-            title="Safety Checks"
-            value="✓ 4 / 4 Passed"
-          />
-
-          <Info
-            title="Battery Reserve"
-            value="38%"
-          />
-
-        </div>
-
-      </section>
-
-
-      {/* ================= METRICS ================= */}
-
-      <section className="metrics">
-
-        <Metric title="Total Area" value="2.45 ha" />
-
-        <Metric
-          title="Flight Altitude"
-          value="40 m AGL"
-        />
-
-        <Metric
-          title="Ground Resolution"
-          value="2.3 cm/px"
-        />
-
-        <Metric
-          title="Front Overlap"
-          value="80%"
-        />
-
-        <Metric
-          title="Side Overlap"
-          value="70%"
-        />
-
-        <Metric
-          title="Est. Flight Time"
-          value="8 min"
-        />
-
-        <Metric
-          title="Est. Distance"
-          value="1.2 km"
-        />
-
-        <Metric
-          title="Battery Usage"
-          value="62%"
-        />
-
-      </section>
-
-    </>
-  );
-}
-
-
-/* =========================================================
-   MISSIONS
-========================================================= */
-
 function MissionsPage() {
+  const missions = JSON.parse(
+    localStorage.getItem("missions") || "[]"
+  );
 
   return (
     <PageShell
@@ -467,100 +321,104 @@ function MissionsPage() {
 
       <div className="page-actions">
 
-        <button className="primary-action">
+        <button
+          className="primary-action"
+          onClick={() =>
+            window.dispatchEvent(
+              new CustomEvent("go-mission-planner")
+            )
+          }
+        >
           + Create Mission
         </button>
 
       </div>
 
-      <div className="mission-list">
+      {missions.length === 0 ? (
 
-        <Mission
-          name="Agricultural Survey"
-          location="College Survey Ground"
-          status="Draft"
-          area="2.45 ha"
-          time="8 min"
-        />
+        <div className="mission-row">
 
-        <Mission
-          name="Campus Mapping"
-          location="Main Campus"
-          status="Ready"
-          area="4.12 ha"
-          time="12 min"
-        />
+          <div className="mission-status-dot"></div>
 
-        <Mission
-          name="Terrain Survey"
-          location="Survey Zone B"
-          status="Completed"
-          area="1.86 ha"
-          time="7 min"
-        />
+          <div className="mission-details">
 
-      </div>
+            <h3>
+              No missions yet
+            </h3>
+
+            <p>
+              Create your first autonomous survey mission.
+            </p>
+
+          </div>
+
+        </div>
+
+      ) : (
+
+        <div className="mission-list">
+
+          {missions.map((mission, index) => (
+
+            <Mission
+              key={index}
+              name={mission.name}
+              location={
+                `${mission.waypoints?.length || 0} waypoints`
+              }
+              status={
+                mission.status || "Ready"
+              }
+              area={
+                `${mission.distance || 0} m`
+              }
+              time={
+                `${mission.estimatedTime || 0} sec`
+              }
+            />
+
+          ))}
+
+        </div>
+
+      )}
 
     </PageShell>
   );
 }
 
 
-/* =========================================================
-   PHOTOS
-========================================================= */
-
 function PhotosPage() {
-
   return (
     <PageShell
       eyebrow="PHOTOS"
       title="Mission photos"
       description="Review aerial images captured during survey missions."
     >
-
       <div className="photo-summary">
 
         <div>
-          <span>126</span>
+          <span>0</span>
           <small>Total photos</small>
         </div>
 
         <div>
-          <span>118</span>
+          <span>0</span>
           <small>Valid images</small>
         </div>
 
         <div>
-          <span>8</span>
+          <span>0</span>
           <small>Pending review</small>
         </div>
 
       </div>
-
-
-      <div className="photo-grid">
-
-        <PhotoCard number="01" />
-        <PhotoCard number="02" />
-        <PhotoCard number="03" />
-        <PhotoCard number="04" />
-        <PhotoCard number="05" />
-        <PhotoCard number="06" />
-
-      </div>
-
     </PageShell>
   );
 }
 
 
-/* =========================================================
-   RESULTS
-========================================================= */
-
 function ResultsPage() {
-
   return (
     <PageShell
       eyebrow="RESULTS"
@@ -571,46 +429,28 @@ function ResultsPage() {
       <div className="result-grid">
 
         <ResultCard
-          title="Coverage"
-          value="94%"
-          text="Excellent survey coverage"
+          title="Mission Status"
+          value="READY"
+          text="Mission planning system ready."
         />
 
         <ResultCard
-          title="Route Efficiency"
-          value="91%"
-          text="Optimized flight path"
+          title="Waypoints"
+          value="--"
+          text="Based on active mission."
         />
 
         <ResultCard
-          title="Image Quality"
-          value="96%"
-          text="High quality captured images"
+          title="Route Distance"
+          value="--"
+          text="Calculated automatically."
         />
 
         <ResultCard
-          title="Mission Health"
-          value="94%"
-          text="All safety checks passed"
+          title="Flight Time"
+          value="--"
+          text="Estimated mission duration."
         />
-
-      </div>
-
-
-      <div className="results-panel">
-
-        <h3>
-          Mission performance
-        </h3>
-
-        <div className="performance-bar">
-          <span style={{ width: "94%" }}></span>
-        </div>
-
-        <div className="performance-labels">
-          <span>Mission completion</span>
-          <strong>94%</strong>
-        </div>
 
       </div>
 
@@ -618,94 +458,8 @@ function ResultsPage() {
   );
 }
 
-
-/* =========================================================
-   REPORTS
-========================================================= */
-
-function ReportsPage() {
-
-  return (
-    <PageShell
-      eyebrow="REPORTS"
-      title="Mission reports"
-      description="Generate and review survey mission reports."
-    >
-
-      <div className="report-card">
-
-        <div className="report-icon">
-          📄
-        </div>
-
-        <div className="report-info">
-
-          <h3>
-            Autonomous Survey Mission Report
-          </h3>
-
-          <p>
-            Complete mission summary including flight
-            statistics, coverage and survey information.
-          </p>
-
-          <div className="report-meta">
-            <span>Mission: Agricultural Survey</span>
-            <span>Area: 2.45 ha</span>
-            <span>Status: Draft</span>
-          </div>
-
-        </div>
-
-        <button className="secondary-action">
-          Generate
-        </button>
-
-      </div>
-
-
-      <div className="report-card">
-
-        <div className="report-icon">
-          📊
-        </div>
-
-        <div className="report-info">
-
-          <h3>
-            Flight Performance Report
-          </h3>
-
-          <p>
-            Route efficiency, battery usage, altitude
-            and mission performance statistics.
-          </p>
-
-          <div className="report-meta">
-            <span>Efficiency: 91%</span>
-            <span>Battery: 62%</span>
-            <span>Flight time: 8 min</span>
-          </div>
-
-        </div>
-
-        <button className="secondary-action">
-          Generate
-        </button>
-
-      </div>
-
-    </PageShell>
-  );
-}
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
 
 function SettingsPage() {
-
   return (
     <PageShell
       eyebrow="SETTINGS"
@@ -721,23 +475,13 @@ function SettingsPage() {
         />
 
         <Setting
-          title="Flight altitude"
-          value="40 m AGL"
-        />
-
-        <Setting
-          title="Front overlap"
-          value="80%"
-        />
-
-        <Setting
-          title="Side overlap"
-          value="70%"
-        />
-
-        <Setting
           title="Mission mode"
           value="Autonomous Survey"
+        />
+
+        <Setting
+          title="Map"
+          value="OpenStreetMap"
         />
 
         <Setting
@@ -752,75 +496,12 @@ function SettingsPage() {
 }
 
 
-/* =========================================================
-   SMALL COMPONENTS
-========================================================= */
-
-function Stat({
-  icon,
-  color,
-  title,
-  value,
-  text
-}) {
-
-  return (
-    <div className="stat-card">
-
-      <span className={`stat-icon ${color}`}>
-        {icon}
-      </span>
-
-      <div>
-
-        <small>{title}</small>
-
-        <strong>{value}</strong>
-
-        <em>{text}</em>
-
-      </div>
-
-    </div>
-  );
-}
-
-
-function Info({ title, value }) {
-
-  return (
-    <div>
-
-      <small>{title}</small>
-
-      <strong>{value}</strong>
-
-    </div>
-  );
-}
-
-
-function Metric({ title, value }) {
-
-  return (
-    <div>
-
-      <small>{title}</small>
-
-      <strong>{value}</strong>
-
-    </div>
-  );
-}
-
-
 function PageShell({
   eyebrow,
   title,
   description,
-  children
+  children,
 }) {
-
   return (
     <div className="page-shell">
 
@@ -852,9 +533,8 @@ function Mission({
   location,
   status,
   area,
-  time
+  time,
 }) {
-
   return (
     <div className="mission-row">
 
@@ -869,59 +549,17 @@ function Mission({
       </div>
 
       <div className="mission-data">
-
-        <small>Area</small>
-
+        <small>Distance</small>
         <strong>{area}</strong>
-
       </div>
 
       <div className="mission-data">
-
         <small>Flight</small>
-
         <strong>{time}</strong>
-
       </div>
 
-      <div
-        className={`status-pill ${
-          status.toLowerCase().replace(" ", "-")
-        }`}
-      >
+      <div className="status-pill">
         {status}
-      </div>
-
-    </div>
-  );
-}
-
-
-function PhotoCard({ number }) {
-
-  return (
-    <div className="photo-card">
-
-      <div className="photo-placeholder">
-
-        <span>DRONE</span>
-
-        <strong>
-          PHOTO {number}
-        </strong>
-
-      </div>
-
-      <div className="photo-info">
-
-        <strong>
-          Survey Image {number}
-        </strong>
-
-        <small>
-          Mission capture point
-        </small>
-
       </div>
 
     </div>
@@ -932,9 +570,8 @@ function PhotoCard({ number }) {
 function ResultCard({
   title,
   value,
-  text
+  text,
 }) {
-
   return (
     <div className="result-card">
 
@@ -951,9 +588,8 @@ function ResultCard({
 
 function Setting({
   title,
-  value
+  value,
 }) {
-
   return (
     <div className="setting-row">
 
