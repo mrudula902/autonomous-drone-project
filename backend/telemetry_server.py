@@ -34,6 +34,7 @@ def telemetry_loop():
     state["missionStatus"] = "CONNECTED"
 
     while True:
+
         message = connection.recv_match(
             type=[
                 "GLOBAL_POSITION_INT",
@@ -41,6 +42,7 @@ def telemetry_loop():
                 "SYS_STATUS",
                 "HEARTBEAT",
                 "MISSION_CURRENT",
+                "STATUSTEXT",
             ],
             blocking=True,
             timeout=5,
@@ -52,52 +54,70 @@ def telemetry_loop():
         msg_type = message.get_type()
 
         if msg_type == "GLOBAL_POSITION_INT":
+
             state["lat"] = round(
                 message.lat / 1e7,
-                6,
+                6
             )
 
             state["lng"] = round(
                 message.lon / 1e7,
-                6,
+                6
             )
 
             state["altitude"] = round(
                 message.relative_alt / 1000,
-                1,
+                1
             )
 
         elif msg_type == "VFR_HUD":
+
             state["speed"] = round(
                 message.groundspeed,
-                1,
+                1
             )
 
         elif msg_type == "SYS_STATUS":
+
             state["battery"] = (
                 message.battery_remaining
             )
 
         elif msg_type == "HEARTBEAT":
+
             state["mode"] = str(
                 message.custom_mode
             )
 
         elif msg_type == "MISSION_CURRENT":
+
             state["waypoint"] = (
                 message.seq
             )
 
+            state["missionStatus"] = (
+                "RUNNING"
+            )
+
+        elif msg_type == "STATUSTEXT":
+
+            text = message.text
+
+            if "Mission" in text:
+                state["missionStatus"] = text
+
 
 @app.get("/api/telemetry")
 def telemetry():
+
     return jsonify(state)
 
 
 if __name__ == "__main__":
+
     thread = threading.Thread(
         target=telemetry_loop,
-        daemon=True,
+        daemon=True
     )
 
     thread.start()
@@ -105,5 +125,5 @@ if __name__ == "__main__":
     app.run(
         host="127.0.0.1",
         port=5001,
-        debug=False,
+        debug=False
     )
