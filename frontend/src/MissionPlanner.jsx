@@ -1,8 +1,7 @@
 import React, { useMemo, useState } from "react";
 import MapView from "./MapView";
 import { validateMission } from "./missionValidator";
-
-const API = "http://127.0.0.1:5000";
+import { saveMissionToCloud } from "./lib/missionStore";
 
 export default function MissionPlanner() {
   const [missionName, setMissionName] = useState(
@@ -13,12 +12,23 @@ export default function MissionPlanner() {
   const [speed, setSpeed] = useState(5);
   const [returnHome, setReturnHome] = useState(true);
 
-  const [surveyType, setSurveyType] = useState("Grid Survey");
-  const [photoGrid, setPhotoGrid] = useState(true);
-  const [frontOverlap, setFrontOverlap] = useState(80);
-  const [sideOverlap, setSideOverlap] = useState(70);
-  const [courseAngle, setCourseAngle] = useState(0);
-  const [photoInterval, setPhotoInterval] = useState(2);
+  const [surveyType, setSurveyType] =
+    useState("Waypoint Survey");
+
+  const [photoGrid, setPhotoGrid] =
+    useState(true);
+
+  const [frontOverlap, setFrontOverlap] =
+    useState(80);
+
+  const [sideOverlap, setSideOverlap] =
+    useState(70);
+
+  const [courseAngle, setCourseAngle] =
+    useState(0);
+
+  const [photoInterval, setPhotoInterval] =
+    useState(2);
 
   const [cameraAction, setCameraAction] =
     useState("Take Photo");
@@ -32,7 +42,9 @@ export default function MissionPlanner() {
   const [waypoints, setWaypoints] =
     useState([]);
 
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] =
+    useState(false);
+
 
   const distance = useMemo(() => {
     if (waypoints.length < 2) return 0;
@@ -44,8 +56,11 @@ export default function MissionPlanner() {
       const a = waypoints[i - 1];
       const b = waypoints[i];
 
-      const lat1 = (a.lat * Math.PI) / 180;
-      const lat2 = (b.lat * Math.PI) / 180;
+      const lat1 =
+        (a.lat * Math.PI) / 180;
+
+      const lat2 =
+        (b.lat * Math.PI) / 180;
 
       const dLat =
         ((b.lat - a.lat) * Math.PI) / 180;
@@ -71,12 +86,14 @@ export default function MissionPlanner() {
     return total;
   }, [waypoints]);
 
+
   const estimatedTime =
     distance > 0 && Number(speed) > 0
       ? Math.ceil(
           distance / Number(speed)
         )
       : 0;
+
 
   const estimatedPhotos = photoGrid
     ? Math.max(
@@ -90,6 +107,7 @@ export default function MissionPlanner() {
         )
       )
     : 0;
+
 
   const saveMission = async () => {
     const mission = {
@@ -115,9 +133,8 @@ export default function MissionPlanner() {
 
       waypoints,
 
-      distance: Number(
-        distance.toFixed(1)
-      ),
+      distance:
+        Number(distance.toFixed(1)),
 
       estimatedTime,
       estimatedPhotos,
@@ -128,49 +145,33 @@ export default function MissionPlanner() {
       status: "Ready",
     };
 
+
     const validation =
       validateMission(mission);
 
+
     if (!validation.valid) {
       alert(
-        validation.errors.join("\n")
+        "Mission cannot be saved:\n\n" +
+          validation.errors.join("\n")
       );
+
       return;
     }
 
+
     setSaving(true);
 
+
     try {
-      const response = await fetch(
-        `${API}/api/missions`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify(mission),
-        }
-      );
-
-      const result =
-        await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          result.errors
-            ? result.errors.join("\n")
-            : result.error ||
-              "Backend rejected mission."
-        );
-      }
+      await saveMissionToCloud(mission);
 
       localStorage.setItem(
         "autonomousMission",
         JSON.stringify(mission)
       );
 
-      const missions =
+      const oldMissions =
         JSON.parse(
           localStorage.getItem(
             "missions"
@@ -181,28 +182,63 @@ export default function MissionPlanner() {
         "missions",
         JSON.stringify([
           mission,
-          ...missions.filter(
+          ...oldMissions.filter(
             (m) =>
               m.name !== mission.name
           ),
         ])
       );
 
+      window.dispatchEvent(
+        new Event("missions-updated")
+      );
+
       alert(
-        "Mission saved successfully.\n\n" +
-        "Backend: ONLINE\n" +
-        `Waypoints: ${waypoints.length}`
+        "Mission saved successfully!\n\n" +
+          "Cloud database: ONLINE\n" +
+          `Waypoints: ${waypoints.length}`
       );
 
     } catch (error) {
       alert(
-        "Mission was not saved to backend:\n\n" +
-        error.message
+        "Cloud save failed:\n\n" +
+          error.message
       );
     } finally {
       setSaving(false);
     }
   };
+
+
+  const resetMission = () => {
+    setMissionName(
+      "New Autonomous Mission"
+    );
+
+    setAltitude(30);
+    setSpeed(5);
+    setReturnHome(true);
+
+    setSurveyType(
+      "Waypoint Survey"
+    );
+
+    setPhotoGrid(true);
+    setFrontOverlap(80);
+    setSideOverlap(70);
+    setCourseAngle(0);
+    setPhotoInterval(2);
+
+    setCameraAction(
+      "Take Photo"
+    );
+
+    setGimbalAngle(-90);
+    setHoverTime(0);
+
+    setWaypoints([]);
+  };
+
 
   return (
     <div className="mission-planner">
@@ -210,6 +246,7 @@ export default function MissionPlanner() {
       <div className="heading-row">
 
         <div>
+
           <div className="eyebrow">
             MISSION PLANNER
           </div>
@@ -222,32 +259,35 @@ export default function MissionPlanner() {
             Select a survey area, configure the
             flight plan and prepare the mission.
           </p>
+
         </div>
+
 
         <button
           type="button"
           className="new-mission"
-          onClick={() => {
-            setMissionName(
-              "New Autonomous Mission"
-            );
-            setWaypoints([]);
-          }}
+          onClick={resetMission}
         >
           + New Mission
         </button>
 
       </div>
 
+
       <section className="stats">
 
         <div className="stat-card">
+
           <span className="stat-icon blue">
             ⌁
           </span>
 
           <div>
-            <small>Survey Route</small>
+
+            <small>
+              Survey Route
+            </small>
+
             <strong>
               {distance > 0
                 ? `${(
@@ -259,16 +299,24 @@ export default function MissionPlanner() {
             <em>
               Calculated distance
             </em>
+
           </div>
+
         </div>
 
+
         <div className="stat-card">
+
           <span className="stat-icon purple">
             ⌖
           </span>
 
           <div>
-            <small>Waypoints</small>
+
+            <small>
+              Waypoints
+            </small>
+
             <strong>
               {waypoints.length}
             </strong>
@@ -276,16 +324,24 @@ export default function MissionPlanner() {
             <em>
               Flight points
             </em>
+
           </div>
+
         </div>
 
+
         <div className="stat-card">
+
           <span className="stat-icon green">
             ◉
           </span>
 
           <div>
-            <small>Photo Points</small>
+
+            <small>
+              Photo Points
+            </small>
+
             <strong>
               {estimatedPhotos}
             </strong>
@@ -293,16 +349,23 @@ export default function MissionPlanner() {
             <em>
               Planned capture points
             </em>
+
           </div>
+
         </div>
 
+
         <div className="stat-card">
+
           <span className="stat-icon orange">
             ✈
           </span>
 
           <div>
-            <small>Mission Status</small>
+
+            <small>
+              Mission Status
+            </small>
 
             <strong>
               {waypoints.length >= 2
@@ -315,10 +378,13 @@ export default function MissionPlanner() {
                 ? "Mission configured"
                 : "Add waypoints"}
             </em>
+
           </div>
+
         </div>
 
       </section>
+
 
       <MapView
         onWaypointsChange={
@@ -326,7 +392,9 @@ export default function MissionPlanner() {
         }
       />
 
+
       <section className="planner-grid">
+
 
         <div className="planner-card">
 
@@ -348,6 +416,7 @@ export default function MissionPlanner() {
             }
           />
 
+
           <label>
             SURVEY TYPE
           </label>
@@ -360,6 +429,7 @@ export default function MissionPlanner() {
               )
             }
           >
+
             <option>
               Grid Survey
             </option>
@@ -375,7 +445,9 @@ export default function MissionPlanner() {
             <option>
               Inspection Survey
             </option>
+
           </select>
+
 
           <label>
             FLIGHT ALTITUDE (m)
@@ -392,6 +464,7 @@ export default function MissionPlanner() {
               )
             }
           />
+
 
           <label>
             FLIGHT SPEED (m/s)
@@ -410,6 +483,7 @@ export default function MissionPlanner() {
             }
           />
 
+
           <label>
             COURSE ANGLE (°)
           </label>
@@ -425,6 +499,7 @@ export default function MissionPlanner() {
               )
             }
           />
+
 
           <label className="checkbox-row">
 
@@ -446,11 +521,13 @@ export default function MissionPlanner() {
 
         </div>
 
+
         <div className="planner-card">
 
           <h3>
             Photo Grid & Survey
           </h3>
+
 
           <label className="checkbox-row">
 
@@ -470,6 +547,7 @@ export default function MissionPlanner() {
 
           </label>
 
+
           <label>
             FRONT OVERLAP (%)
           </label>
@@ -486,6 +564,7 @@ export default function MissionPlanner() {
               )
             }
           />
+
 
           <label>
             SIDE OVERLAP (%)
@@ -504,6 +583,7 @@ export default function MissionPlanner() {
             }
           />
 
+
           <label>
             PHOTO INTERVAL (m)
           </label>
@@ -521,7 +601,9 @@ export default function MissionPlanner() {
             }
           />
 
+
           <div className="summary-row">
+
             <span>
               Planned photo points
             </span>
@@ -529,15 +611,18 @@ export default function MissionPlanner() {
             <strong>
               {estimatedPhotos}
             </strong>
+
           </div>
 
         </div>
+
 
         <div className="planner-card">
 
           <h3>
             Camera Options
           </h3>
+
 
           <label>
             CAMERA ACTION
@@ -551,6 +636,7 @@ export default function MissionPlanner() {
               )
             }
           >
+
             <option>
               Take Photo
             </option>
@@ -562,7 +648,9 @@ export default function MissionPlanner() {
             <option>
               Stop Recording
             </option>
+
           </select>
+
 
           <label>
             GIMBAL ANGLE (°)
@@ -579,6 +667,7 @@ export default function MissionPlanner() {
               )
             }
           />
+
 
           <label>
             HOVER TIME (sec)
@@ -598,42 +687,63 @@ export default function MissionPlanner() {
 
         </div>
 
+
         <div className="planner-card">
 
           <h3>
             Mission Summary
           </h3>
 
+
           <div className="summary-row">
-            <span>Waypoints</span>
+            <span>
+              Waypoints
+            </span>
+
             <strong>
               {waypoints.length}
             </strong>
           </div>
 
+
           <div className="summary-row">
-            <span>Route distance</span>
+            <span>
+              Route distance
+            </span>
+
             <strong>
               {distance.toFixed(1)} m
             </strong>
           </div>
 
+
           <div className="summary-row">
-            <span>Altitude</span>
+            <span>
+              Altitude
+            </span>
+
             <strong>
               {altitude} m
             </strong>
           </div>
 
+
           <div className="summary-row">
-            <span>Speed</span>
+            <span>
+              Speed
+            </span>
+
             <strong>
               {speed} m/s
             </strong>
           </div>
 
+
           <div className="summary-row">
-            <span>Estimated flight time</span>
+            <span>
+              Estimated flight time
+            </span>
+
             <strong>
               {estimatedTime > 0
                 ? `${estimatedTime} sec`
@@ -641,8 +751,12 @@ export default function MissionPlanner() {
             </strong>
           </div>
 
+
           <div className="summary-row">
-            <span>Photo grid</span>
+            <span>
+              Photo grid
+            </span>
+
             <strong>
               {photoGrid
                 ? "Enabled"
@@ -650,35 +764,52 @@ export default function MissionPlanner() {
             </strong>
           </div>
 
+
           <div className="summary-row">
-            <span>Front overlap</span>
+            <span>
+              Front overlap
+            </span>
+
             <strong>
               {frontOverlap}%
             </strong>
           </div>
 
+
           <div className="summary-row">
-            <span>Side overlap</span>
+            <span>
+              Side overlap
+            </span>
+
             <strong>
               {sideOverlap}%
             </strong>
           </div>
 
+
           <div className="summary-row">
-            <span>Camera action</span>
+            <span>
+              Camera action
+            </span>
+
             <strong>
               {cameraAction}
             </strong>
           </div>
 
+
           <div className="summary-row">
-            <span>Return home</span>
+            <span>
+              Return home
+            </span>
+
             <strong>
               {returnHome
                 ? "Enabled"
                 : "Disabled"}
             </strong>
           </div>
+
 
           <button
             type="button"
