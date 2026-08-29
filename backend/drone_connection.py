@@ -15,27 +15,46 @@ try:
         source_system=255
     )
 
-    master.wait_heartbeat(timeout=15)
+    heartbeat = master.recv_match(
+        type="HEARTBEAT",
+        blocking=True,
+        timeout=15
+    )
+
+    if heartbeat is None:
+        raise TimeoutError(
+            "No MAVLink heartbeat received within 15 seconds"
+        )
+
+    system_id = heartbeat.get_srcSystem()
+    component_id = heartbeat.get_srcComponent()
 
     print()
     print("CONNECTED SUCCESSFULLY")
     print("----------------------------")
-    print("System ID:", master.target_system)
-    print("Component ID:", master.target_component)
+    print("System ID:", system_id)
+    print("Component ID:", component_id)
+    print("Vehicle Type:", heartbeat.type)
+    print("Autopilot Type:", heartbeat.autopilot)
 
-    heartbeat = master.recv_match(
-        type="HEARTBEAT",
+    print()
+    print("Waiting for system information...")
+
+    sys_status = master.recv_match(
+        type="SYS_STATUS",
         blocking=True,
         timeout=5
     )
 
-    if heartbeat:
-        print("Vehicle Type:", heartbeat.type)
-        print("Autopilot Type:", heartbeat.autopilot)
+    if sys_status:
+        print("System status received: YES")
         print(
-            "Flight Mode:",
-            mavutil.mode_string_v10(heartbeat)
+            "Battery remaining:",
+            sys_status.battery_remaining,
+            "%"
         )
+    else:
+        print("System status received: NO")
 
     print()
     print("DRONE CONNECTION TEST COMPLETE")
