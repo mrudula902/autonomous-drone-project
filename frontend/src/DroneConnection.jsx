@@ -1,171 +1,192 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  getDJIStatus,
+  connectDJI,
+  disconnectDJI,
+} from "./missionApi";
 
 export default function DroneConnection() {
   const [status, setStatus] = useState({
     connected: false,
-    status: "CHECKING",
-    message: "Checking for MAVLink flight controller..."
+    aircraft: "DJI Mini 4 Pro",
+    controller: "DJI RC 2",
+    mode: "STANDBY",
+    missionStatus: "IDLE",
   });
 
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("Checking connection service...");
 
-  const checkDrone = async () => {
-    setLoading(true);
-
+  const refreshStatus = async () => {
     try {
-      const response = await fetch(
-        "http://127.0.0.1:5050/api/drone/status"
-      );
-
-      const data = await response.json();
+      const data = await getDJIStatus();
 
       setStatus(data);
 
+      setMessage(
+        data.connected
+          ? "Drone interface is connected."
+          : "Drone interface is ready for connection."
+      );
     } catch (error) {
-      setStatus({
+      setMessage("Connection service is offline.");
+      setStatus((old) => ({
+        ...old,
         connected: false,
-        status: "API OFFLINE",
-        message:
-          "Drone connection service is not running"
-      });
+      }));
+    }
+  };
 
+  const handleConnect = async () => {
+    setLoading(true);
+
+    try {
+      const data = await connectDJI();
+
+      setStatus(data.status || data);
+      setMessage(
+        data.message || "Drone interface connected."
+      );
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDisconnect = async () => {
+    setLoading(true);
+
+    try {
+      const data = await disconnectDJI();
+
+      setStatus(data.status || data);
+      setMessage(
+        data.message || "Drone interface disconnected."
+      );
+    } catch (error) {
+      setMessage(error.message);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    checkDrone();
+    refreshStatus();
+
+    const timer = setInterval(refreshStatus, 2000);
+
+    return () => clearInterval(timer);
   }, []);
 
   return (
-    <div
-      style={{
-        padding: "30px",
-        maxWidth: "900px",
-        margin: "0 auto"
-      }}
-    >
-      <div
-        style={{
-          marginBottom: "30px"
-        }}
-      >
-        <h2>
-          Drone Connection Center
-        </h2>
+    <section className="mission-intelligence">
+      <div className="analysis-header">
+        <div>
+          <div className="eyebrow">
+            DRONE CONNECTION
+          </div>
 
-        <p>
-          Detect and monitor MAVLink-compatible
-          flight controllers.
-        </p>
-      </div>
+          <h2>Aircraft Interface</h2>
 
-      <div
-        style={{
-          padding: "25px",
-          borderRadius: "15px",
-          background: "#ffffff",
-          boxShadow:
-            "0 5px 25px rgba(0,0,0,0.08)"
-        }}
-      >
+          <p>
+            Monitor the configured aircraft and controller
+            communication layer.
+          </p>
+        </div>
 
-        <h3>
-          Connection Status
-        </h3>
+        <div className="mission-health">
+          <small>STATUS</small>
 
-        <h1>
-          {status.connected
-            ? "🟢 CONNECTED"
-            : "🔴 " + status.status}
-        </h1>
-
-        <p>
-          {status.message}
-        </p>
-
-        {status.connected && (
-          <div
+          <strong
             style={{
-              marginTop: "25px",
-              lineHeight: "2"
+              color: status.connected
+                ? "#38d39f"
+                : "#f87171",
             }}
           >
-            <div>
-              <strong>
-                System ID:
-              </strong>{" "}
-              {status.system_id}
-            </div>
+            {status.connected
+              ? "CONNECTED"
+              : "READY"}
+          </strong>
+        </div>
+      </div>
 
-            <div>
-              <strong>
-                Component ID:
-              </strong>{" "}
-              {status.component_id}
-            </div>
+      <div className="analysis-grid">
+        <div>
+          <small>Aircraft</small>
+          <strong>
+            {status.aircraft || "DJI Mini 4 Pro"}
+          </strong>
+        </div>
 
-            <div>
-              <strong>
-                Vehicle Type:
-              </strong>{" "}
-              {status.vehicle_type}
-            </div>
+        <div>
+          <small>Controller</small>
+          <strong>
+            {status.controller || "DJI RC 2"}
+          </strong>
+        </div>
 
-            <div>
-              <strong>
-                Autopilot Type:
-              </strong>{" "}
-              {status.autopilot_type}
-            </div>
+        <div>
+          <small>Connection</small>
+          <strong>
+            {status.connected
+              ? "ONLINE"
+              : "OFFLINE"}
+          </strong>
+        </div>
 
-          </div>
-        )}
+        <div>
+          <small>Mode</small>
+          <strong>
+            {status.mode || "STANDBY"}
+          </strong>
+        </div>
 
-        <button
-          onClick={checkDrone}
-          disabled={loading}
-          style={{
-            marginTop: "25px",
-            padding: "12px 22px",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: "bold"
-          }}
-        >
-          {loading
-            ? "Checking..."
-            : "Refresh Connection"}
-        </button>
-
+        <div>
+          <small>Mission</small>
+          <strong>
+            {status.missionStatus || "IDLE"}
+          </strong>
+        </div>
       </div>
 
       <div
         style={{
-          marginTop: "25px",
-          padding: "20px",
-          borderRadius: "12px",
-          background: "#f5f7fa"
+          display: "flex",
+          gap: "12px",
+          marginTop: "22px",
+          alignItems: "center",
+          flexWrap: "wrap",
         }}
       >
-        <h3>
-          Connection Information
-        </h3>
+        <button
+          className="primary-action"
+          onClick={handleConnect}
+          disabled={loading || status.connected}
+        >
+          {loading
+            ? "Connecting..."
+            : "Connect Interface"}
+        </button>
 
-        <p>
-          This module checks for MAVLink heartbeat
-          messages from a compatible flight controller.
-        </p>
+        <button
+          className="secondary-action"
+          onClick={handleDisconnect}
+          disabled={loading || !status.connected}
+        >
+          Disconnect
+        </button>
 
-        <p>
-          Mission planning and flight-controller
-          communication are separate stages of the
-          system.
-        </p>
+        <span
+          style={{
+            fontSize: "13px",
+            opacity: 0.75,
+          }}
+        >
+          {message}
+        </span>
       </div>
-
-    </div>
+    </section>
   );
 }

@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MissionPlanner from "./MissionPlanner";
 import Reports from "./pages/Reports";
 import TelemetryPanel from "./TelemetryPanel";
-import DroneConnection from "./DroneConnection";
+import { getMissionsFromCloud } from "./lib/missionStore";
 import "./App.css";
 
 export default function App() {
-  const [started, setStarted] = useState(false);
-  const [page, setPage] = useState("Mission Planner");
+  const [started, setStarted] =
+    useState(false);
+
+  const [page, setPage] =
+    useState("Mission Planner");
 
   const menu = [
     ["🗺", "Mission Planner"],
@@ -24,7 +27,10 @@ export default function App() {
         <div className="welcome-overlay"></div>
 
         <div className="welcome-content">
-          <div className="welcome-logo">✈</div>
+
+          <div className="welcome-logo">
+            ✈
+          </div>
 
           <div className="welcome-kicker">
             AUTONOMOUS DRONE SYSTEM
@@ -40,7 +46,9 @@ export default function App() {
 
           <button
             className="launch-button"
-            onClick={() => setStarted(true)}
+            onClick={() =>
+              setStarted(true)
+            }
           >
             Launch Mission Studio
             <span>→</span>
@@ -50,6 +58,7 @@ export default function App() {
             <span></span>
             SYSTEM READY
           </div>
+
         </div>
 
         <div className="welcome-drone drone-one">
@@ -67,19 +76,25 @@ export default function App() {
         <div className="welcome-drone drone-four">
           ✦
         </div>
+
       </div>
     );
   }
 
+
   return (
     <div className="app">
+
       <header className="topbar">
+
         <div className="brand">
+
           <div className="brand-icon">
             ✈
           </div>
 
           <div>
+
             <h1>
               DRONE <span>MISSION STUDIO</span>
             </h1>
@@ -87,10 +102,14 @@ export default function App() {
             <p>
               Autonomous Survey & Mission Planning System
             </p>
+
           </div>
+
         </div>
 
+
         <nav className="top-navigation">
+
           {[
             "Mission Planner",
             "Missions",
@@ -98,6 +117,7 @@ export default function App() {
             "Results",
             "Reports",
           ].map((item) => (
+
             <button
               key={item}
               className={
@@ -105,19 +125,37 @@ export default function App() {
                   ? "top-active"
                   : ""
               }
-              onClick={() => setPage(item)}
+              onClick={() =>
+                setPage(item)
+              }
             >
-              {item === "Mission Planner" && "▣ "}
-              {item === "Missions" && "⌖ "}
-              {item === "Photos" && "▣ "}
-              {item === "Results" && "▥ "}
-              {item === "Reports" && "▤ "}
+
+              {item === "Mission Planner" &&
+                "▣ "}
+
+              {item === "Missions" &&
+                "⌖ "}
+
+              {item === "Photos" &&
+                "▣ "}
+
+              {item === "Results" &&
+                "▥ "}
+
+              {item === "Reports" &&
+                "▤ "}
+
               {item}
+
             </button>
+
           ))}
+
         </nav>
 
+
         <div className="system-status">
+
           <span></span>
 
           <div>
@@ -127,52 +165,72 @@ export default function App() {
               All systems operational
             </small>
           </div>
+
         </div>
+
 
         <div className="profile">
           M
         </div>
+
       </header>
 
+
       <div className="workspace">
+
+
         <aside className="sidebar">
+
           <div className="sidebar-mountain"></div>
 
           <div className="sidebar-content">
+
             <div className="section-title">
               MISSION CONTROL
             </div>
 
-            <div className="side-menu">
-              {menu.map(([icon, name]) => (
-                <button
-                  key={name}
-                  className={
-                    page === name
-                      ? "side-active"
-                      : ""
-                  }
-                  onClick={() =>
-                    setPage(name)
-                  }
-                >
-                  <span className="menu-icon">
-                    {icon}
-                  </span>
 
-                  <span>
-                    {name}
-                  </span>
-                </button>
-              ))}
+            <div className="side-menu">
+
+              {menu.map(
+                ([icon, name]) => (
+
+                  <button
+                    key={name}
+                    className={
+                      page === name
+                        ? "side-active"
+                        : ""
+                    }
+                    onClick={() =>
+                      setPage(name)
+                    }
+                  >
+
+                    <span className="menu-icon">
+                      {icon}
+                    </span>
+
+                    <span>
+                      {name}
+                    </span>
+
+                  </button>
+
+                )
+              )}
+
             </div>
 
+
             <div className="aircraft-card">
+
               <div className="aircraft-title">
                 AIRCRAFT
               </div>
 
               <div className="drone-visual">
+
                 <div className="drone-arm left-arm"></div>
                 <div className="drone-arm right-arm"></div>
 
@@ -185,10 +243,11 @@ export default function App() {
                   <div className="drone-camera"></div>
                   <div className="drone-light"></div>
                 </div>
+
               </div>
 
               <h3>
-                DJI Mini 4 Pro
+                DJI Mavic 4 Pro
               </h3>
 
               <div className="connection">
@@ -197,6 +256,7 @@ export default function App() {
               </div>
 
               <div className="battery">
+
                 <div className="battery-track">
                   <span></span>
                 </div>
@@ -204,10 +264,14 @@ export default function App() {
                 <b>
                   92%
                 </b>
+
               </div>
+
             </div>
 
+
             <div className="weather-card">
+
               <div className="weather-title">
                 MISSION CONDITIONS
               </div>
@@ -222,38 +286,52 @@ export default function App() {
               </div>
 
               <div className="weather-grid">
+
                 <div>
-                  <strong>12 km/h</strong>
+                  <strong>
+                    12 km/h
+                  </strong>
                   <small>Wind</small>
                 </div>
 
                 <div>
-                  <strong>65%</strong>
+                  <strong>
+                    65%
+                  </strong>
                   <small>Humidity</small>
                 </div>
 
                 <div>
-                  <strong>Good</strong>
+                  <strong>
+                    Good
+                  </strong>
                   <small>Visibility</small>
                 </div>
+
               </div>
+
             </div>
+
           </div>
+
         </aside>
 
+
         <main className="main-content">
+
           {page === "Mission Planner" && (
             <>
               <MissionPlanner />
-
-              <DroneConnection />
-
               <TelemetryPanel />
             </>
           )}
 
           {page === "Missions" && (
-            <MissionsPage />
+            <MissionsPage
+              onCreateMission={() =>
+                setPage("Mission Planner")
+              }
+            />
           )}
 
           {page === "Photos" && (
@@ -271,16 +349,88 @@ export default function App() {
           {page === "Settings" && (
             <SettingsPage />
           )}
+
         </main>
+
       </div>
+
     </div>
   );
 }
 
-function MissionsPage() {
-  const missions = JSON.parse(
-    localStorage.getItem("missions") || "[]"
-  );
+
+/* =========================================================
+   CLOUD MISSIONS
+========================================================= */
+
+function MissionsPage({
+  onCreateMission,
+}) {
+  const [missions, setMissions] =
+    useState([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const loadMissions = async () => {
+
+    setLoading(true);
+
+    try {
+
+      const rows =
+        await getMissionsFromCloud();
+
+      const cloudMissions =
+        rows.map(
+          (row) => row.mission_data
+        );
+
+      setMissions(
+        cloudMissions
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      const local =
+        JSON.parse(
+          localStorage.getItem(
+            "missions"
+          ) || "[]"
+        );
+
+      setMissions(local);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+  };
+
+
+  useEffect(() => {
+
+    loadMissions();
+
+    const refresh = () =>
+      loadMissions();
+
+    window.addEventListener(
+      "missions-updated",
+      refresh
+    );
+
+    return () =>
+      window.removeEventListener(
+        "missions-updated",
+        refresh
+      );
+
+  }, []);
+
 
   return (
     <PageShell
@@ -288,135 +438,234 @@ function MissionsPage() {
       title="Mission management"
       description="Create, review and manage autonomous survey missions."
     >
+
       <div className="page-actions">
+
         <button
+          type="button"
           className="primary-action"
-          onClick={() =>
-            window.dispatchEvent(
-              new CustomEvent("go-mission-planner")
-            )
-          }
+          onClick={onCreateMission}
         >
           + Create Mission
         </button>
+
       </div>
 
-      {missions.length === 0 ? (
+
+      {loading ? (
+
         <div className="mission-row">
+
           <div className="mission-status-dot"></div>
 
           <div className="mission-details">
+
+            <h3>
+              Loading missions...
+            </h3>
+
+            <p>
+              Connecting to cloud storage.
+            </p>
+
+          </div>
+
+        </div>
+
+      ) : missions.length === 0 ? (
+
+        <div className="mission-row">
+
+          <div className="mission-status-dot"></div>
+
+          <div className="mission-details">
+
             <h3>
               No missions yet
             </h3>
 
             <p>
-              Create your first autonomous survey mission.
+              Create your first autonomous
+              survey mission.
             </p>
+
           </div>
+
         </div>
+
       ) : (
+
         <div className="mission-list">
-          {missions.map((mission, index) => (
-            <Mission
-              key={index}
-              name={mission.name}
-              location={`${mission.waypoints?.length || 0} waypoints`}
-              status={mission.status || "Ready"}
-              area={`${mission.distance || 0} m`}
-              time={`${mission.estimatedTime || 0} sec`}
-            />
-          ))}
+
+          {missions.map(
+            (mission, index) => (
+
+              <Mission
+                key={
+                  mission.createdAt ||
+                  index
+                }
+
+                name={
+                  mission.name
+                }
+
+                location={
+                  `${
+                    mission.waypoints?.length ||
+                    0
+                  } waypoints`
+                }
+
+                status={
+                  mission.status ||
+                  "Ready"
+                }
+
+                area={
+                  `${
+                    mission.distance ||
+                    0
+                  } m`
+                }
+
+                time={
+                  `${
+                    mission.estimatedTime ||
+                    0
+                  } sec`
+                }
+
+              />
+
+            )
+          )}
+
         </div>
+
       )}
+
     </PageShell>
   );
 }
 
+
+/* =========================================================
+   PHOTOS
+========================================================= */
+
 function PhotosPage() {
+
+  const localMission =
+    JSON.parse(
+      localStorage.getItem(
+        "autonomousMission"
+      ) || "null"
+    );
+
   return (
     <PageShell
       eyebrow="PHOTOS"
       title="Mission photos"
       description="Review aerial images captured during survey missions."
     >
+
       <div className="photo-summary">
+
         <div>
-          <span>0</span>
-          <small>Total photos</small>
+          <span>
+            {localMission?.estimatedPhotos ||
+              0}
+          </span>
+
+          <small>
+            Planned photos
+          </small>
         </div>
 
         <div>
           <span>0</span>
-          <small>Valid images</small>
+          <small>
+            Captured images
+          </small>
         </div>
 
         <div>
-          <span>0</span>
-          <small>Pending review</small>
+          <span>
+            {localMission?.waypoints?.length ||
+              0}
+          </span>
+
+          <small>
+            Waypoints
+          </small>
         </div>
+
       </div>
+
     </PageShell>
   );
 }
 
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
 function ResultsPage() {
+
   return (
     <PageShell
       eyebrow="RESULTS"
       title="Survey results"
-      description="Analyze mission coverage, route performance and captured data."
+      description="Review vehicle telemetry and mission results."
     >
-      <div className="result-grid">
-        <ResultCard
-          title="Mission Status"
-          value="READY"
-          text="Mission planning system ready."
-        />
 
-        <ResultCard
-          title="Waypoints"
-          value="--"
-          text="Based on active mission."
-        />
+      <ResultCard
+        title="Telemetry"
+        value="Available on connected workstation"
+        text="Live SITL/MAVLink telemetry remains tied to the local flight-control environment."
+      />
 
-        <ResultCard
-          title="Route Distance"
-          value="--"
-          text="Calculated automatically."
-        />
+      <ResultCard
+        title="Cloud Missions"
+        value="Enabled"
+        text="Mission history is stored in the shared cloud database."
+      />
 
-        <ResultCard
-          title="Flight Time"
-          value="--"
-          text="Estimated mission duration."
-        />
-      </div>
     </PageShell>
   );
 }
 
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
 function SettingsPage() {
+
   return (
     <PageShell
       eyebrow="SETTINGS"
       title="System settings"
       description="Configure the mission planning system."
     >
+
       <div className="settings-panel">
-        <Setting
-          title="Aircraft"
-          value="DJI Mini 4 Pro"
-        />
 
         <Setting
-          title="Controller"
-          value="DJI RC 2"
+          title="Aircraft"
+          value="DJI Mavic 4 Pro"
         />
 
         <Setting
           title="Mission mode"
           value="Autonomous Survey"
+        />
+
+        <Setting
+          title="Cloud storage"
+          value="Supabase"
         />
 
         <Setting
@@ -428,10 +677,13 @@ function SettingsPage() {
           title="System status"
           value="Ready"
         />
+
       </div>
+
     </PageShell>
   );
 }
+
 
 function PageShell({
   eyebrow,
@@ -441,8 +693,11 @@ function PageShell({
 }) {
   return (
     <div className="page-shell">
+
       <div className="page-heading">
+
         <div>
+
           <div className="eyebrow">
             {eyebrow}
           </div>
@@ -450,13 +705,17 @@ function PageShell({
           <h2>{title}</h2>
 
           <p>{description}</p>
+
         </div>
+
       </div>
 
       {children}
+
     </div>
   );
 }
+
 
 function Mission({
   name,
@@ -467,11 +726,19 @@ function Mission({
 }) {
   return (
     <div className="mission-row">
+
       <div className="mission-status-dot"></div>
 
       <div className="mission-details">
-        <h3>{name}</h3>
-        <p>{location}</p>
+
+        <h3>
+          {name}
+        </h3>
+
+        <p>
+          {location}
+        </p>
+
       </div>
 
       <div className="mission-data">
@@ -487,9 +754,11 @@ function Mission({
       <div className="status-pill">
         {status}
       </div>
+
     </div>
   );
 }
+
 
 function ResultCard({
   title,
@@ -498,12 +767,23 @@ function ResultCard({
 }) {
   return (
     <div className="result-card">
-      <small>{title}</small>
-      <strong>{value}</strong>
-      <p>{text}</p>
+
+      <small>
+        {title}
+      </small>
+
+      <strong>
+        {value}
+      </strong>
+
+      <p>
+        {text}
+      </p>
+
     </div>
   );
 }
+
 
 function Setting({
   title,
@@ -511,12 +791,23 @@ function Setting({
 }) {
   return (
     <div className="setting-row">
+
       <div>
-        <small>{title}</small>
-        <strong>{value}</strong>
+
+        <small>
+          {title}
+        </small>
+
+        <strong>
+          {value}
+        </strong>
+
       </div>
 
-      <span>›</span>
+      <span>
+        ›
+      </span>
+
     </div>
   );
 }

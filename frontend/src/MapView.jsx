@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   MapContainer,
   TileLayer,
@@ -7,10 +8,11 @@ import {
   Polyline,
   CircleMarker,
   useMap,
-  useMapEvents,
+  useMapEvents
 } from "react-leaflet";
 
 import L from "leaflet";
+
 import "leaflet/dist/leaflet.css";
 import "./MapView.css";
 
@@ -18,7 +20,7 @@ const waypointIcon = new L.DivIcon({
   className: "waypoint-icon",
   html: `<div class="waypoint-marker">✈</div>`,
   iconSize: [34, 34],
-  iconAnchor: [17, 17],
+  iconAnchor: [17, 17]
 });
 
 function MapController({ location }) {
@@ -32,7 +34,7 @@ function MapController({ location }) {
       17,
       {
         animate: true,
-        duration: 1.2,
+        duration: 1.2
       }
     );
   }, [location, map]);
@@ -45,33 +47,29 @@ function MapClickHandler({ onAddWaypoint }) {
     click(e) {
       onAddWaypoint({
         lat: e.latlng.lat,
-        lng: e.latlng.lng,
+        lng: e.latlng.lng
       });
-    },
+    }
   });
 
   return null;
 }
 
 export default function MapView({
-  onWaypointsChange,
+  onWaypointsChange
 }) {
   const [waypoints, setWaypoints] = useState([]);
-
-  // ONE box for Google Maps coordinates
   const [coordinateInput, setCoordinateInput] =
     useState("");
-
   const [searchLocation, setSearchLocation] =
     useState(null);
-
   const [searchError, setSearchError] =
     useState("");
 
   const addWaypoint = (point) => {
     const updated = [
       ...waypoints,
-      point,
+      point
     ];
 
     setWaypoints(updated);
@@ -81,24 +79,12 @@ export default function MapView({
     }
   };
 
-  /*
-   * Accepts:
-   *
-   * 19.0760, 72.8777
-   *
-   * Also accepts:
-   *
-   * 19.0760 72.8777
-   *
-   * and coordinates with brackets.
-   */
   const searchCoordinates = () => {
     setSearchError("");
 
-    const cleaned =
-      coordinateInput
-        .trim()
-        .replace(/[()[\]]/g, "");
+    const cleaned = coordinateInput
+      .trim()
+      .replace(/[()[\]]/g, "");
 
     if (!cleaned) {
       setSearchError(
@@ -107,13 +93,9 @@ export default function MapView({
       return;
     }
 
-    /*
-     * Split on comma OR spaces.
-     */
-    const parts =
-      cleaned
-        .split(/[,\s]+/)
-        .filter(Boolean);
+    const parts = cleaned
+      .split(/[,\s]+/)
+      .filter(Boolean);
 
     if (parts.length < 2) {
       setSearchError(
@@ -149,10 +131,9 @@ export default function MapView({
       return;
     }
 
-    // Move map to searched location
     setSearchLocation({
       lat,
-      lng,
+      lng
     });
   };
 
@@ -191,14 +172,12 @@ export default function MapView({
   const route = waypoints.map(
     (point) => [
       point.lat,
-      point.lng,
+      point.lng
     ]
   );
 
   return (
     <div className="map-section">
-
-      {/* HEADER */}
 
       <div className="map-header">
 
@@ -207,9 +186,7 @@ export default function MapView({
             FLIGHT AREA
           </div>
 
-          <h3>
-            Mission route
-          </h3>
+          <h3>Mission route</h3>
 
           <p>
             Paste coordinates from Google Maps
@@ -251,8 +228,6 @@ export default function MapView({
         </div>
 
       </div>
-
-      {/* GOOGLE MAPS COORDINATE SEARCH */}
 
       <div className="coordinate-search">
 
@@ -305,37 +280,24 @@ export default function MapView({
 
         {searchLocation && (
           <div className="coordinate-found">
-
-            ✓ Location found:
-
-            {" "}
-
-            {searchLocation.lat.toFixed(6)}
-
-            {", "}
-
+            ✓ Location found:{" "}
+            {searchLocation.lat.toFixed(6)},{" "}
             {searchLocation.lng.toFixed(6)}
-
           </div>
         )}
 
       </div>
-
-      {/* MAP */}
 
       <div className="map-container">
 
         <MapContainer
           center={[
             19.076,
-            72.8777,
+            72.8777
           ]}
           zoom={13}
           scrollWheelZoom={true}
-          style={{
-            width: "100%",
-            height: "520px",
-          }}
+          className="leaflet-map"
         >
 
           <TileLayer
@@ -351,77 +313,57 @@ export default function MapView({
             onAddWaypoint={addWaypoint}
           />
 
-          {/* SEARCHED LOCATION */}
-
           {searchLocation && (
             <CircleMarker
               center={[
                 searchLocation.lat,
-                searchLocation.lng,
+                searchLocation.lng
               ]}
               radius={10}
               pathOptions={{
                 color: "#38bdf8",
                 fillColor: "#38bdf8",
-                fillOpacity: 0.8,
+                fillOpacity: 0.8
               }}
             >
               <Popup>
                 <strong>
                   Selected Location
                 </strong>
-
                 <br />
-
                 Latitude:{" "}
                 {searchLocation.lat.toFixed(6)}
-
                 <br />
-
                 Longitude:{" "}
                 {searchLocation.lng.toFixed(6)}
               </Popup>
             </CircleMarker>
           )}
 
-          {/* WAYPOINTS */}
-
           {waypoints.map(
             (point, index) => (
-
               <Marker
                 key={index}
                 position={[
                   point.lat,
-                  point.lng,
+                  point.lng
                 ]}
                 icon={waypointIcon}
               >
-
                 <Popup>
-
                   <strong>
                     Waypoint {index + 1}
                   </strong>
-
                   <br />
-
                   Latitude:{" "}
                   {point.lat.toFixed(6)}
-
                   <br />
-
                   Longitude:{" "}
                   {point.lng.toFixed(6)}
-
                 </Popup>
-
               </Marker>
-
             )
           )}
-
-          {/* ROUTE */}
 
           {route.length > 1 && (
             <Polyline
@@ -429,7 +371,7 @@ export default function MapView({
               pathOptions={{
                 color: "#38bdf8",
                 weight: 4,
-                opacity: 0.9,
+                opacity: 0.9
               }}
             />
           )}
@@ -438,10 +380,7 @@ export default function MapView({
 
       </div>
 
-      {/* WAYPOINT LIST */}
-
       {waypoints.length > 0 && (
-
         <div className="waypoint-list">
 
           <div className="waypoint-list-title">
@@ -450,12 +389,10 @@ export default function MapView({
 
           {waypoints.map(
             (point, index) => (
-
               <div
                 className="waypoint-row"
                 key={index}
               >
-
                 <strong>
                   WP {index + 1}
                 </strong>
@@ -467,14 +404,11 @@ export default function MapView({
                 <span>
                   {point.lng.toFixed(6)}
                 </span>
-
               </div>
-
             )
           )}
 
         </div>
-
       )}
 
     </div>

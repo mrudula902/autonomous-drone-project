@@ -16,6 +16,8 @@ export default function TelemetryPanel() {
   });
 
   useEffect(() => {
+    let active = true;
+
     const readTelemetry = async () => {
       try {
         const response = await fetch(
@@ -28,13 +30,17 @@ export default function TelemetryPanel() {
 
         const data = await response.json();
 
-        setTelemetry(data);
+        if (active) {
+          setTelemetry(data);
+        }
       } catch {
-        setTelemetry((old) => ({
-          ...old,
-          connected: false,
-          missionStatus: "BACKEND OFFLINE",
-        }));
+        if (active) {
+          setTelemetry((old) => ({
+            ...old,
+            connected: false,
+            missionStatus: "BACKEND OFFLINE",
+          }));
+        }
       }
     };
 
@@ -45,29 +51,30 @@ export default function TelemetryPanel() {
       1000
     );
 
-    return () => clearInterval(timer);
+    return () => {
+      active = false;
+      clearInterval(timer);
+    };
   }, []);
 
   return (
     <section className="mission-intelligence">
-
       <div className="analysis-header">
-
         <div>
           <div className="eyebrow">
             LIVE FLIGHT TELEMETRY
           </div>
 
-          <h2>
-            Vehicle Status
-          </h2>
+          <h2>Vehicle Status</h2>
+
+          <p>
+            Real-time information received from the
+            flight-control environment.
+          </p>
         </div>
 
         <div className="mission-health">
-
-          <small>
-            CONNECTION
-          </small>
+          <small>CONNECTION</small>
 
           <strong
             style={{
@@ -80,33 +87,23 @@ export default function TelemetryPanel() {
               ? "CONNECTED"
               : "OFFLINE"}
           </strong>
-
         </div>
-
       </div>
 
-
       <div className="analysis-grid">
-
         <div>
           <small>Flight Mode</small>
-          <strong>
-            {telemetry.mode}
-          </strong>
+          <strong>{telemetry.mode}</strong>
         </div>
 
         <div>
           <small>Latitude</small>
-          <strong>
-            {telemetry.lat}
-          </strong>
+          <strong>{telemetry.lat}</strong>
         </div>
 
         <div>
           <small>Longitude</small>
-          <strong>
-            {telemetry.lng}
-          </strong>
+          <strong>{telemetry.lng}</strong>
         </div>
 
         <div>
@@ -143,9 +140,7 @@ export default function TelemetryPanel() {
             {telemetry.missionStatus}
           </strong>
         </div>
-
       </div>
-
     </section>
   );
 }
